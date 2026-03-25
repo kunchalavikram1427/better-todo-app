@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from flask import Blueprint, flash, redirect, render_template, request, url_for
+from flask import Blueprint, current_app, flash, redirect, render_template, request, url_for
 
 from . import db
 from .models import Todo
@@ -16,7 +16,11 @@ def index():
         "done": sum(1 for todo in todos if todo.is_done),
     }
     stats["open"] = stats["total"] - stats["done"]
-    return render_template("index.html", todos=todos, stats=stats)
+
+    db_uri = current_app.config["SQLALCHEMY_DATABASE_URI"]
+    db_type = "PostgreSQL" if "postgresql" in db_uri else "SQLite"
+
+    return render_template("index.html", todos=todos, stats=stats, db_type=db_type)
 
 
 @main_bp.route("/todos", methods=["POST"])

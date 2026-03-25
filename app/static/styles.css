@@ -31,7 +31,7 @@ body {
 .page-shell {
   width: min(1180px, calc(100% - 32px));
   margin: 0 auto;
-  padding: 36px 0 56px;
+  padding: 36px 0 80px;
 }
 
 .hero-card,
@@ -327,4 +327,40 @@ textarea:focus {
   .stats-grid {
     grid-template-columns: 1fr;
   }
+}
+
+.info-footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 24px;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-top: 1px solid var(--line);
+  z-index: 100;
+}
+
+.footer-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.footer-db {
+  color: var(--blue);
+  background: rgba(53, 120, 255, 0.1);
+}
+
+.footer-clock {
+  color: var(--muted);
+  background: rgba(102, 112, 133, 0.08);
 }

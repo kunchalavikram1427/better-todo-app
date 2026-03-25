@@ -71,6 +71,8 @@ better-todo-app/
 │       ├── base.html          # Base layout (head, CSS link)
 │       └── index.html         # Main page (hero, stats, form, todo list)
 ├── .claude/
+│   ├── agents/                # Subagents (autonomous Claude instances)
+│   │   └── change-summarizer.md  # Analyzes diffs, summarizes changes
 │   ├── commands/              # Simple slash commands (single .md files)
 │   │   ├── health.md          # /health — project health check
 │   │   └── reset-db.md        # /reset-db — delete local SQLite DB
@@ -210,6 +212,31 @@ docker compose up --build          # http://localhost:5000
 | `/review [area]` | skill | Code quality audit with severity-rated findings |
 | `/test-gen [scope]` | skill | Generate a pytest test suite |
 | `/docker-up [flag]` | skill | Build and launch Docker Compose stack |
+
+## Claude Code Agents (Subagents)
+
+Agents are autonomous Claude instances that run as subprocesses. Unlike commands/skills (which guide the main Claude session), agents are **separate Claude sessions** that work independently and return results.
+
+| Agent | File | What it does | Has Memory? |
+|-------|------|-------------|-------------|
+| `change-summarizer` | `.claude/agents/change-summarizer.md` | Analyzes git diffs and summarizes changes since the last commit | Yes (project-scoped) |
+
+### How Agents Differ from Commands & Skills
+
+| | Commands / Skills | Agents |
+|---|---|---|
+| **Execution** | Run inline in the main Claude session | Spawn a separate Claude subprocess |
+| **Location** | `.claude/commands/` or `.claude/skills/` | `.claude/agents/` |
+| **Invocation** | Slash command (`/health`) or auto-trigger | Parent agent launches via Agent tool |
+| **Blocking** | Always inline | Foreground (blocks) or background (async) |
+| **Memory** | No persistent memory | Can have persistent file-based memory |
+| **Context** | Shares main session context | Gets its own isolated context |
+
+### Agent Execution Modes
+
+- **Foreground** (default): Parent waits for the agent to finish before continuing
+- **Background** (`run_in_background: true`): Parent continues immediately; gets notified on completion
+- **Worktree** (`isolation: "worktree"`): Agent works in an isolated git worktree copy of the repo
 
 ## Common Development Tasks
 

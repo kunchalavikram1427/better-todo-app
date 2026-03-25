@@ -269,6 +269,90 @@ Instructions referencing supporting files:
 
 ---
 
+### Agents (`.claude/agents/`)
+
+Agents are a **third extension type** alongside commands and skills. While commands and skills guide the main Claude session, agents spawn **autonomous Claude subprocesses** that work independently and return results.
+
+```
+.claude/agents/
+└── change-summarizer.md     # Git diff analyzer with persistent memory
+```
+
+#### How agents work
+
+1. The parent Claude session decides to spawn an agent (based on your request or the agent's `description`)
+2. Claude reads `.claude/agents/change-summarizer.md`
+3. A **separate Claude subprocess** is launched with the agent's instructions
+4. The agent works autonomously — reading files, running commands, analyzing code
+5. When done, it returns its results to the parent session
+6. The parent summarizes the results for you
+
+#### Agent vs Command vs Skill
+
+| | Commands | Skills | Agents |
+|---|---|---|---|
+| **Location** | `.claude/commands/` | `.claude/skills/` | `.claude/agents/` |
+| **Format** | Single `.md` file | Directory with entry point + supporting files | Single `.md` file |
+| **Execution** | Inline in main session | Inline in main session | Separate subprocess |
+| **Blocking** | Always inline | Always inline | Foreground (blocks) or background (async) |
+| **Memory** | No | No | Optional persistent file-based memory |
+| **Best for** | Simple tasks | Complex workflows with templates/scripts | Autonomous analysis, parallel work |
+
+#### Agent execution modes
+
+Agents can be launched in different modes by the parent Claude session:
+
+| Mode | Behavior | Best for |
+|------|----------|----------|
+| **Foreground** (default) | Parent waits for agent to finish | When you need results immediately |
+| **Background** | Parent continues; notified on completion | Long-running or independent tasks |
+| **Worktree** | Agent works in an isolated git worktree copy | Safe experimentation without affecting main code |
+
+#### `change-summarizer` — Diff Analyzer
+
+Analyzes the project's git diffs and provides a clear summary of what has changed since the last commit, including purpose and potential impact. Has **persistent project-scoped memory** — it remembers user preferences and project context across sessions.
+
+```
+# Triggered automatically when you ask to summarize changes
+"summarize the changes"
+"what changed since last commit?"
+```
+
+#### Agent file anatomy
+
+```yaml
+---
+name: change-summarizer              # Agent identifier
+description: "Use this agent when    # When to auto-trigger
+  someone asks for it"
+model: inherit                       # Use parent's model
+color: blue                          # UI badge color
+memory: project                      # Persistent memory scope
+---
+
+System prompt and instructions for the agent.
+```
+
+#### Creating your own agent
+
+Create `.claude/agents/my-agent.md`:
+
+```yaml
+---
+name: my-agent
+description: "When to trigger this agent"
+model: inherit
+color: green
+memory: project
+---
+
+Instructions for what the agent should do.
+```
+
+The agent appears in the agents list on the next Claude Code session.
+
+---
+
 ### Creating Your Own
 
 #### Add a command (simple, single-file)

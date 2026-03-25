@@ -72,7 +72,7 @@ better-todo-app/
 │       └── index.html         # Main page (hero, stats, form, todo list)
 ├── .claude/
 │   ├── commands/              # Simple slash commands (single .md files)
-│   │   ├── status.md          # /status — project health check
+│   │   ├── health.md          # /health — project health check
 │   │   └── reset-db.md        # /reset-db — delete local SQLite DB
 │   └── skills/                # Rich skills (directories with supporting files)
 │       ├── add-feature/       # /add-feature — full-stack feature scaffolding
@@ -203,7 +203,7 @@ docker compose up --build          # http://localhost:5000
 
 | Command | Type | What it does |
 |---------|------|-------------|
-| `/status` | command | Quick health check — git, venv, deps, DB, Docker |
+| `/health` | command | Quick health check — git, venv, deps, DB, Docker |
 | `/reset-db` | command | Delete SQLite DB for clean schema reset |
 | `/add-feature [desc]` | skill | Implement a feature across models, routes, templates, CSS |
 | `/dev [port]` | skill | Set up venv, install deps, start dev server |

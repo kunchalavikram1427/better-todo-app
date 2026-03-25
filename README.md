@@ -1,4 +1,4 @@
-# Todo Spark
+# Better Todo App
 
 A polished Flask todo application with persistent storage, Docker support, and a full set of Claude Code skills and commands for AI-assisted development.
 
@@ -76,7 +76,7 @@ Commands are single markdown files. The filename (minus `.md`) becomes the slash
 
 ```
 .claude/commands/
-├── status.md        # creates /status
+├── health.md        # creates /health
 └── reset-db.md      # creates /reset-db
 ```
 
@@ -85,14 +85,14 @@ Commands are single markdown files. The filename (minus `.md`) becomes the slash
 Type the slash command directly in Claude Code:
 
 ```
-/status              # quick project health check
+/health              # quick project health check
 /reset-db            # delete SQLite DB for a clean schema reset
 ```
 
 #### How commands work
 
-1. You type `/status` in Claude Code
-2. Claude reads `.claude/commands/status.md`
+1. You type `/health` in Claude Code
+2. Claude reads `.claude/commands/health.md`
 3. The YAML frontmatter tells Claude the name, description, and argument hints
 4. The markdown body is the instruction set Claude follows
 5. Claude executes the steps and reports back
@@ -101,7 +101,7 @@ Type the slash command directly in Claude Code:
 
 ```yaml
 ---
-name: status                          # slash command name
+name: health                          # slash command name
 description: Quick project health     # when Claude should auto-trigger this
   check — shows git status and deps.
 argument-hint: ""                     # autocomplete hint (empty = no args)
@@ -110,12 +110,12 @@ argument-hint: ""                     # autocomplete hint (empty = no args)
 Markdown instructions that Claude follows when this command is invoked.
 ```
 
-#### `/status` — Project Health Check
+#### `/health` — Project Health Check
 
 Shows git branch, uncommitted changes, venv status, dependencies, SQLite database, and Docker containers in a quick summary table.
 
 ```
-/status
+/health
 ```
 
 #### `/reset-db` — Reset the Local Database
@@ -259,7 +259,7 @@ Instructions referencing supporting files:
 
 | Command | Source | What it does | Auto-triggers? |
 |---------|--------|-------------|----------------|
-| `/status` | command | Quick project health table | Yes |
+| `/health` | command | Quick project health table | Yes |
 | `/reset-db` | command | Delete SQLite DB for clean schema | Yes |
 | `/add-feature` | skill | Implement a feature across all layers | Yes |
 | `/dev` | skill | Set up venv + start Flask dev server | No (manual) |

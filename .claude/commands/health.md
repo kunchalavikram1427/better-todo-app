@@ -1,10 +1,10 @@
 ---
-name: status
+name: health
 description: Quick project health check — shows git status, dependency state, and whether the app can start. A lightweight alternative to the full /review skill.
 argument-hint: ""
 ---
 
-Give a quick status overview of the Better Todo App project.
+Give a quick health overview of the Better Todo App project.
 
 ## Steps
 

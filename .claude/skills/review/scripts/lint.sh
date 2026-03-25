@@ -31,7 +31,7 @@ echo ""
 
 # 3. Check for raw SQL
 echo "--- Raw SQL check ---"
-if grep -rn "db.engine.execute\|db.session.execute\|text(" app/ 2>/dev/null; then
+if grep -rn "db\.engine\.execute\|db\.session\.execute\|sqlalchemy\.text(" app/ 2>/dev/null; then
   echo "  WARNING: Raw SQL found — verify parameterization"
 else
   echo "  OK — No raw SQL detected (ORM-only)"

@@ -39,7 +39,7 @@ echo ""
 echo "--- Template block check ---"
 for tmpl in app/templates/*.html; do
   if [ -f "$tmpl" ]; then
-    OPENS=$(grep -c '{%.*block ' "$tmpl" 2>/dev/null || true)
+    OPENS=$(grep -o '{%[^}]*block ' "$tmpl" 2>/dev/null | grep -vc 'endblock' || true)
     CLOSES=$(grep -c '{%.*endblock' "$tmpl" 2>/dev/null || true)
     if [ "$OPENS" -eq "$CLOSES" ]; then
       echo "  OK   $tmpl (blocks: $OPENS open, $CLOSES close)"

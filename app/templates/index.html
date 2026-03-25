@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+
+{% block title %}Task Tracker{% endblock %}
+
+{% block content %}
+  <main class="page-shell">
+    <section class="hero-card">
+      <div class="hero-copy">
+        <p class="eyebrow">Organize Better, Ship Faster</p>
+        <h1>Task Tracker</h1>
+        <p class="hero-text">
+          A polished todo workspace for capturing tasks, tracking progress, and keeping your day in motion.
+        </p>
+      </div>
+
+      <div class="stats-grid">
+        <article class="stat-tile total">
+          <span>Total</span>
+          <strong>{{ stats.total }}</strong>
+        </article>
+        <article class="stat-tile open">
+          <span>Open</span>
+          <strong>{{ stats.open }}</strong>
+        </article>
+        <article class="stat-tile done">
+          <span>Done</span>
+          <strong>{{ stats.done }}</strong>
+        </article>
+      </div>
+    </section>
+
+    <section class="content-grid">
+      <section class="panel form-panel">
+        <h2>Add a new task</h2>
+        <form action="{{ url_for('main.add_todo') }}" method="post" class="todo-form">
+          <label for="title">Title</label>
+          <input id="title" name="title" type="text" maxlength="160" placeholder="Ship Flask todo app" required>
+
+          <label for="description">Description</label>
+          <textarea id="description" name="description" rows="5" placeholder="Add details, due notes, or context"></textarea>
+
+          <button type="submit" class="btn btn-primary">Add Todo</button>
+        </form>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            <div class="flash-stack">
+              {% for category, message in messages %}
+                <div class="flash flash-{{ category }}">{{ message }}</div>
+              {% endfor %}
+            </div>
+          {% endif %}
+        {% endwith %}
+      </section>
+
+      <section class="panel list-panel">
+        <div class="list-heading">
+          <h2>Your tasks</h2>
+          <span>{{ stats.total }} item{% if stats.total != 1 %}s{% endif %}</span>
+        </div>
+
+        {% if todos %}
+          <div class="todo-list">
+            {% for todo in todos %}
+              <article class="todo-card {% if todo.is_done %}todo-done{% endif %}">
+                <div class="todo-main">
+                  <div class="todo-badge {% if todo.is_done %}badge-done{% else %}badge-open{% endif %}">
+                    {% if todo.is_done %}Done{% else %}Open{% endif %}
+                  </div>
+                  <h3>{{ todo.title }}</h3>
+                  {% if todo.description %}
+                    <p>{{ todo.description }}</p>
+                  {% endif %}
+                  <div class="meta-row">
+                    <span>Created {{ todo.created_at.strftime("%d %b %Y, %I:%M %p") }}</span>
+                    {% if todo.completed_at %}
+                      <span>Completed {{ todo.completed_at.strftime("%d %b %Y, %I:%M %p") }}</span>
+                    {% endif %}
+                  </div>
+                </div>
+
+                <div class="action-row">
+                  <form action="{{ url_for('main.toggle_todo', todo_id=todo.id) }}" method="post">
+                    <button type="submit" class="btn {% if todo.is_done %}btn-secondary{% else %}btn-success{% endif %}">
+                      {% if todo.is_done %}Mark Open{% else %}Mark Done{% endif %}
+                    </button>
+                  </form>
+                  <form action="{{ url_for('main.delete_todo', todo_id=todo.id) }}" method="post">
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                  </form>
+                </div>
+              </article>
+            {% endfor %}
+          </div>
+        {% else %}
+          <div class="empty-state">
+            <h3>No todos yet</h3>
+            <p>Add your first task to get started.</p>
+          </div>
+        {% endif %}
+      </section>
+    </section>
+  </main>
+{% endblock %}

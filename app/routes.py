@@ -1,3 +1,4 @@
+import socket
 from datetime import datetime
 
 from flask import Blueprint, current_app, flash, redirect, render_template, request, url_for
@@ -20,7 +21,13 @@ def index():
     db_uri = current_app.config["SQLALCHEMY_DATABASE_URI"]
     db_type = "PostgreSQL" if "postgresql" in db_uri else "SQLite"
 
-    return render_template("index.html", todos=todos, stats=stats, db_type=db_type)
+    try:
+        hostname = socket.gethostname()
+        ip_address = socket.gethostbyname(hostname)
+    except socket.error:
+        ip_address = "127.0.0.1"
+
+    return render_template("index.html", todos=todos, stats=stats, db_type=db_type, ip_address=ip_address)
 
 
 @main_bp.route("/todos", methods=["POST"])

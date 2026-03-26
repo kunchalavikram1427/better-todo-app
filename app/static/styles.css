@@ -360,6 +360,11 @@ textarea:focus {
   background: rgba(53, 120, 255, 0.1);
 }
 
+.footer-ip {
+  color: var(--cyan);
+  background: rgba(25, 182, 210, 0.1);
+}
+
 .footer-clock {
   color: var(--muted);
   background: rgba(102, 112, 133, 0.08);
